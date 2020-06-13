@@ -6,7 +6,7 @@ const port = process.env.PORT || 5000;
 
 // Handlebars
 const exphbs = require('express-handlebars');
-app.engine('handlebars', exphbs({ defaultLayout: 'main'}));
+app.engine('handlebars', exphbs({ defaultLayout: 'index'}));
 app.set('view engine', 'handlebars');
 
 app.get('/', (req, res) => {
