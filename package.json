@@ -1,0 +1,29 @@
+{
+  "name": "stock_react",
+  "version": "1.0.0",
+  "description": "Read [SETUP.md](https://github.com/bonliu/stockpro/blob/master/SETUP.md) to see how I set up my environment in **Arch Linux**.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "server": "nodemon server.js",
+    "start": "node server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "express-handlebars": "^4.0.4"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.4"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bonliu/stock_react.git"
+  },
+  "bugs": {
+    "url": "https://github.com/bonliu/stock_react/issues"
+  },
+  "homepage": "https://github.com/bonliu/stock_react#readme"
+}
