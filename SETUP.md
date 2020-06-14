@@ -98,3 +98,17 @@ Modify `views/layouts/main.handlebars` to match the following
 </body>
 </html>
 ```
+
+# [sqlite3](https://www.npmjs.com/package/sqlite3)
+SQLite is not a client-server database engine. Rather, it is embedded into the end program.
+### Installation
+```bash
+npm install sqlite3 --save-dev
+```
+
+# [md5](https://preview.npmjs.com/package/md5)
+I am using this JavaScript function to hash users' password.
+### Installation
+```bash
+npm install md5 --save-dev
+```
