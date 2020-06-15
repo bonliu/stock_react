@@ -118,3 +118,9 @@ npm install md5 --save-dev # You might want to do this in client/
 ```bash
 npm install body-parser --save-dev
 ```
+
+# react-router-dom
+### Installation
+```bash
+npm install react-router-dom --save-dev
+```
