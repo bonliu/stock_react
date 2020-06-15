@@ -110,5 +110,11 @@ npm install sqlite3 --save-dev
 I am using this JavaScript function to hash users' password.
 ### Installation
 ```bash
-npm install md5 --save-dev
+npm install md5 --save-dev # You might want to do this in client/
+```
+
+# [body-parser](https://www.npmjs.com/package/body-parser)
+### Installation
+```bash
+npm install body-parser --save-dev
 ```
