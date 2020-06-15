@@ -21,17 +21,17 @@
 
 ### What I ran:
 ```bash
-git checkout -b database
+git checkout -b <new-branch>
 # Work on including SQLite 3
 # Finish
 git add <New files>
 git commit -m <message>
-git push origin database
+git push origin <new-branch>
 # Create pull request on GitHub
-# Stay on branch database
+# Stay on branch <new-branch>
 git fetch
 git merge master # Already up to date.
 git checkout master # Switched to branch 'master'
-git merge --no-ff database
+git merge --no-ff <new-branch>
 git push origin master
 ```
