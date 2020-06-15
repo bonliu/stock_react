@@ -37,8 +37,7 @@ app.get('/api/users', (req, res) => {
 });
 
 app.post('/api/login', (req, res) => {
-    const stmt = 'SELECT * FROM users WHERE email = ? AND password = ?';
-    // const params = [req.body.email, md5(req.body.passowrd)];
+    const stmt = 'SELECT * FROM users WHERE email = UPPER(?) AND password = ?';
     const params = [req.body.email, req.body.password];
 
     db.all(stmt, params, (err, rows) => {
@@ -49,6 +48,23 @@ app.post('/api/login', (req, res) => {
             res.json({
                 "message": "fail"
             })
+        } else {
+            res.json({
+                "message": "success",
+                "data": rows
+            });
+        }
+    });
+});
+
+app.post('/api/register', (req, res) => {
+    const stmt = `INSERT INTO users (name, email, password) VALUES (UPPER(?), LOWER(?), ?)`;
+    const params = [req.body.name, req.body.email, req.body.password];
+
+    db.run(stmt, params, (err, rows) => {
+        if (err) {
+            res.status(400).json({ "error": err.message });
+            return;
         } else {
             res.json({
                 "message": "success",

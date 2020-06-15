@@ -24,7 +24,7 @@ const db = new sqlite3.Database(DBSOURCE, (err) => {
             } else {
                 let insert = `INSERT INTO users (
                                 name, email, password
-                            ) VALUES (?, ?, ?)`
+                            ) VALUES (UPPER(?), LOWER(?), ?)`;
                 db.run(insert, ['admin', 'admin@stockpro.com', md5('incorrect')]);
             }
         });
