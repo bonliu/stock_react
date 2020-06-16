@@ -37,7 +37,7 @@ app.get('/api/users', (req, res) => {
 });
 
 app.post('/api/login', (req, res) => {
-    const stmt = 'SELECT * FROM users WHERE email = UPPER(?) AND password = ?';
+    const stmt = 'SELECT * FROM users WHERE email = LOWER(?) AND password = ?';
     const params = [req.body.email, req.body.password];
 
     db.all(stmt, params, (err, rows) => {
