@@ -8,7 +8,9 @@ const db = new sqlite3.Database(DBSOURCE, (err) => {
         throw err;
     } else {
         console.log('Connected to the SQLite database.');
-        let create = `CREATE TABLE users (
+        
+        console.log('Creating users table...');
+        let createUsers = `CREATE TABLE users (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             name text,
             email text,
@@ -18,7 +20,7 @@ const db = new sqlite3.Database(DBSOURCE, (err) => {
             stocks text,
             CONSTRAINT email_unique UNIQUE (email)
         )`;
-        db.run(create, (err) => {
+        db.run(createUsers, (err) => {
             if (err) {
                 console.error(err.message);
             } else {
@@ -26,6 +28,18 @@ const db = new sqlite3.Database(DBSOURCE, (err) => {
                                 name, email, password
                             ) VALUES (UPPER(?), LOWER(?), ?)`;
                 db.run(insert, ['admin', 'admin@stockpro.com', md5('incorrect')]);
+            }
+        });
+
+        console.log('Creating stocks table...');
+        let createStocks = `CREATE TABLE stocks (
+            email text,
+            ticker text,
+            count integer
+        )`;
+        db.run(createStocks, (err) => {
+            if (err) {
+                console.error(err.message);
             }
         });
     }

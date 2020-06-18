@@ -28,6 +28,8 @@ class Login extends React.Component {
         if (data.message === 'success') {
             console.log('YOU ARE IN');
             this.setState({ loggedIn: true });
+        } else {
+            alert('Your password is incorrect');
         }
         console.log(data);
     }

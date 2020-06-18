@@ -74,4 +74,80 @@ app.post('/api/register', (req, res) => {
     });
 });
 
+app.post('/api/stock/count', (req, res) => {
+    const stmt = `SELECT count FROM stocks WHERE email = LOWER(?) AND ticker = UPPER(?)`;
+    const params = [req.body.email, req.body.ticker];
+
+    db.get(stmt, params, (err, row) => {
+        if (err) {
+            res.status(400).json({ "error": err.message });
+            return;
+        } else {
+            if (row) {
+                res.json({
+                    "message": "success",
+                    "count": row.count
+                });
+            } else {
+                res.json({
+                    "message": "success",
+                    "count": 0
+                });
+            }
+        }
+    });
+});
+
+app.post('/api/stock/buy', (req, res) => {
+    const stmt = 'INSERT INTO stocks (email, ticker, count) VALUES (LOWER(?), UPPER(?), ?)';
+    console.log(req.body);
+    const params = [req.body.email, req.body.ticker, req.body.qty];
+
+    db.run(stmt, params, (err, rows) => {
+        if (err) {
+            res.status(400).json({ "error": err.message });
+            return;
+        } else {
+            res.json({
+                "message": "success",
+                "data": rows
+            });
+        }
+    });
+});
+
+app.post('/api/stock/update', (req, res) => {
+    const stmt = 'UPDATE stocks SET count = ? WHERE email = LOWER(?) AND ticker = UPPER(?)';
+    console.log(req.body);
+    const params = [req.body.qty, req.body.email, req.body.ticker];
+
+    db.run(stmt, params, (err, rows) => {
+        if (err) {
+            res.status(400).json({ "error": err.message });
+            return;
+        } else {
+            res.json({
+                "message": "success",
+                "data": rows
+            });
+        }
+    });
+});
+
+app.get('/api/stocks', (req, res) => {
+    const stmt = 'SELECT * FROM stocks';
+    const params = [];
+
+    db.all(stmt, params, (err, rows) => {
+        if (err) {
+            res.status(400).json({ "error": err.message });
+            return;
+        }
+        res.json({
+            "message": "success",
+            "data": rows
+        });
+    });
+});
+
 app.listen(port, () => console.log(`Listening on port ${port}`));
