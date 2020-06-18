@@ -59,6 +59,11 @@ class Portfolio extends React.Component {
         console.log(data);
     }
 
+    // TODO: Get balance
+    // TODO: Update balance
+    // TODO: Get current price (for stock)
+
+
     handleSubmit = async e => {
         e.preventDefault();
         const response = await fetch('/api/stock/count', {
