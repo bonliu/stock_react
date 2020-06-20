@@ -134,6 +134,22 @@ app.post('/api/stock/update', (req, res) => {
     });
 });
 
+app.post('/api/stocks/list', (req, res) => {
+    const stmt = 'SELECT * FROM stocks WHERE email = ?';
+    const params = [req.body.email];
+
+    db.all(stmt, params, (err, rows) => {
+        if (err) {
+            res.status(400).json({ "error": err.message });
+            return;
+        }
+        res.json({
+            "message": "success",
+            "data": rows
+        });
+    });
+});
+
 app.get('/api/stocks', (req, res) => {
     const stmt = 'SELECT * FROM stocks';
     const params = [];

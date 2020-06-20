@@ -17,7 +17,11 @@ class Portfolio extends React.Component {
     componentDidMount() {
         // Load user's stock and price
         this.setState({ email: this.props.email });
+        
         // Extract user's stock
+        this.getTickerList();
+        console.log(this.state.stocks);
+
         // Update user's stock value (total asset)
     }
 
@@ -56,6 +60,27 @@ class Portfolio extends React.Component {
         });
 
         const data = await response.json();
+        console.log(data);
+    }
+
+    // TODO: Get all stocks
+    getTickerList = async () => {
+        console.log(this.props.email);
+        const response = await fetch('/api/stocks/list', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                email: this.props.email
+            })
+        });
+
+        const data = await response.json();
+        data.data.forEach(element => {
+            this.state.stocks.push(element)
+        });
+        console.log(this.state.stocks)
         console.log(data);
     }
 
@@ -101,7 +126,7 @@ class Portfolio extends React.Component {
                                 <tr>
                                     <th>Ticker</th>
                                     <th>Number of shares</th>
-                                    <th>Buy at</th>
+                                    {/* <th>Buy at</th> */}
                                 </tr>
                             </thead>
                             <tbody>
@@ -109,7 +134,7 @@ class Portfolio extends React.Component {
                                     return (
                                         <tr key={item.ticker}>
                                             <td>{item.ticker}</td>
-                                            <td>{item.shares}</td>
+                                            <td>{item.count}</td>
                                             {/* <td>{item.currentPrice}</td> */}
                                         </tr>
                                     )
