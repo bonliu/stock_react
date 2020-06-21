@@ -170,4 +170,36 @@ app.get('/api/stocks', (req, res) => {
     });
 });
 
+app.post('/api/balance', (req, res) => {
+    const stmt = 'SELECT balance FROM users WHERE email = ?';
+    const params = [req.body.email];
+
+    db.get(stmt, params, (err, row) => {
+        if (err) {
+            res.status(400).json({ "error": err.message });
+            return;
+        }
+        res.json({
+            "message": "success",
+            "balance": row.balance
+        });
+    });
+});
+
+app.post('/api/balance/update', (req, res) => {
+    const stmt = 'UPDATE users SET balance = ? WHERE email = LOWER(?)';
+    const params = [req.body.balance, req.body.email];
+
+    db.run(stmt, params, (err) => {
+        if (err) {
+            res.status(400).json({ "error": err.message });
+            return;
+        } else {
+            res.json({
+                "message": "success"
+            });
+        }
+    });
+});
+
 app.listen(port, () => console.log(`Listening on port ${port}`));

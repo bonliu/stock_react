@@ -1,7 +1,6 @@
 import React from 'react';
 import '../styles/Portfolio.css';
 
-// import TickerListRow from './TickerListRow';
 import TickerList from './TickerList';
 
 class Portfolio extends React.Component {
@@ -20,6 +19,8 @@ class Portfolio extends React.Component {
     componentDidMount() {
         // Load user's stock and price
         this.setState({ email: this.props.email });
+        this.getBalance()
+            .then(res => this.setState({ balance: res }));
 
         // Update user's stock value (total asset)
     }
@@ -61,6 +62,20 @@ class Portfolio extends React.Component {
     }
 
     // TODO: Get balance
+    getBalance = async e => {
+        const response = await fetch('/api/balance', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                email: this.props.email
+            })
+        });
+
+        const data = await response.json();
+        return parseFloat(data.balance / 100);
+    }
     // TODO: Update balance
     // TODO: Get current price (for stock)
 
