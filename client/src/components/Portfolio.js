@@ -1,6 +1,8 @@
 import React from 'react';
 import '../styles/Portfolio.css';
 
+import TickerListRow from './TickerListRow'
+
 class Portfolio extends React.Component {
     constructor(props) {
         super(props);
@@ -19,7 +21,7 @@ class Portfolio extends React.Component {
         this.setState({ email: this.props.email });
         
         // Extract user's stock
-        this.getTickerList();
+        this.getTickerList().then(res => {this.setState({stocks: res})});
         console.log(this.state.stocks);
 
         // Update user's stock value (total asset)
@@ -65,7 +67,6 @@ class Portfolio extends React.Component {
 
     // TODO: Get all stocks
     getTickerList = async () => {
-        console.log(this.props.email);
         const response = await fetch('/api/stocks/list', {
             method: 'POST',
             headers: {
@@ -77,11 +78,14 @@ class Portfolio extends React.Component {
         });
 
         const data = await response.json();
-        data.data.forEach(element => {
-            this.state.stocks.push(element)
-        });
-        console.log(this.state.stocks)
         console.log(data);
+        return data.data;
+        // this.setState({ stocks: data })
+        // data.data.forEach(element => {
+        //     this.state.stocks.push(element)
+        // });
+        // console.log(this.state.stocks)
+        // console.log(data);
     }
 
     // TODO: Get balance
@@ -107,7 +111,6 @@ class Portfolio extends React.Component {
         if (data.count === 0) {
             this.buyStock();
         } else {
-            console.log('In Progress....');
             const newQty = data.count + parseInt(this.state.qty);
             this.setState({ qty: newQty });
             this.updateQty();
@@ -130,15 +133,24 @@ class Portfolio extends React.Component {
                                 </tr>
                             </thead>
                             <tbody>
-                                {this.state.stocks.map((item) => {
-                                    return (
-                                        <tr key={item.ticker}>
-                                            <td>{item.ticker}</td>
-                                            <td>{item.count}</td>
-                                            {/* <td>{item.currentPrice}</td> */}
-                                        </tr>
-                                    )
-                                })}
+                                {this.state.stocks.map(item => (
+                                    // <TickerListRow ticker={item.ticker} shares={item.count} />
+                                    <tr className="table-row" key={item.ticker}>
+                                    <td className="table-item">
+                                        {item.ticker}
+                                    </td>
+                                    
+                                    <td className="table-item">
+                                        {item.count}
+                                    </td>
+                    
+                                    <td className="table-item">
+                                        <button className="btn btn-remove" onClick={this.handleOnClick}>
+                                            Sell
+                                        </button>
+                                    </td>
+                                </tr>
+                                ))}
                             </tbody>
                         </table>
                     </div>

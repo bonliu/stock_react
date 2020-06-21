@@ -1,8 +1,8 @@
 // Dependencies
 const express = require('express');
 const db = require('./database.js');
-// const md5 = require('md5');
 const bodyParser = require('body-parser');
+const exphbs = require('express-handlebars');
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -12,7 +12,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // Handlebars
-const exphbs = require('express-handlebars');
 app.engine('handlebars', exphbs({ defaultLayout: 'main'}));
 app.set('view engine', 'handlebars');
 
@@ -31,7 +30,7 @@ app.get('/api/users', (req, res) => {
         }
         res.json({
             "message": "success",
-            "data": rows
+            "users": rows
         });
     });
 });
@@ -61,14 +60,13 @@ app.post('/api/register', (req, res) => {
     const stmt = `INSERT INTO users (name, email, password) VALUES (UPPER(?), LOWER(?), ?)`;
     const params = [req.body.name, req.body.email, req.body.password];
 
-    db.run(stmt, params, (err, rows) => {
+    db.run(stmt, params, (err) => {
         if (err) {
             res.status(400).json({ "error": err.message });
             return;
         } else {
             res.json({
-                "message": "success",
-                "data": rows
+                "message": "success"
             });
         }
     });
@@ -103,14 +101,13 @@ app.post('/api/stock/buy', (req, res) => {
     console.log(req.body);
     const params = [req.body.email, req.body.ticker, req.body.qty];
 
-    db.run(stmt, params, (err, rows) => {
+    db.run(stmt, params, (err) => {
         if (err) {
             res.status(400).json({ "error": err.message });
             return;
         } else {
             res.json({
-                "message": "success",
-                "data": rows
+                "message": "success"
             });
         }
     });
@@ -121,21 +118,20 @@ app.post('/api/stock/update', (req, res) => {
     console.log(req.body);
     const params = [req.body.qty, req.body.email, req.body.ticker];
 
-    db.run(stmt, params, (err, rows) => {
+    db.run(stmt, params, (err) => {
         if (err) {
             res.status(400).json({ "error": err.message });
             return;
         } else {
             res.json({
-                "message": "success",
-                "data": rows
+                "message": "success"
             });
         }
     });
 });
 
 app.post('/api/stocks/list', (req, res) => {
-    const stmt = 'SELECT * FROM stocks WHERE email = ?';
+    const stmt = 'SELECT ticker, count FROM stocks WHERE email = ?';
     const params = [req.body.email];
 
     db.all(stmt, params, (err, rows) => {

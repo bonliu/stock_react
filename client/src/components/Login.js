@@ -26,7 +26,6 @@ class Login extends React.Component {
 
         const data = await response.json();
         if (data.message === 'success') {
-            console.log('YOU ARE IN');
             this.setState({ loggedIn: true });
         } else {
             alert('Your password is incorrect');
