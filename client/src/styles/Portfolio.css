@@ -21,12 +21,6 @@
     flex-direction: row;
 }
 
-.stockTable {
-    margin: auto;
-    height: 200px;
-    overflow: auto;
-}
-
 .buyingForm {
     margin: auto;
     /* height: 100px; */

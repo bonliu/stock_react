@@ -109,7 +109,7 @@ app.post('/api/stock/buy', (req, res) => {
             res.json({
                 "message": "success",
                 "data": {
-                    "ticker": req.body.ticker,
+                    "ticker": req.body.ticker.toUpperCase(),
                     "count": req.body.qty
                 }
             });

@@ -1,14 +1,15 @@
 import React from 'react';
 import '../styles/Portfolio.css';
 
-import TickerListRow from './TickerListRow'
+// import TickerListRow from './TickerListRow';
+import TickerList from './TickerList';
 
 class Portfolio extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             email: '',
-            balance: '',
+            balance: 0,
             profit: '',
             stocks: [],
             ticker: '',
@@ -19,17 +20,9 @@ class Portfolio extends React.Component {
     componentDidMount() {
         // Load user's stock and price
         this.setState({ email: this.props.email });
-        
-        // Extract user's stock
-        this.getTickerList().then(res => {this.setState({stocks: res})});
-        console.log(this.state.stocks);
 
         // Update user's stock value (total asset)
     }
-
-    // componentDidUpdate() {
-    //     // Load user's updated stock and price
-    // }
 
     buyStock = async () => {
         const response = await fetch('/api/stock/buy', {
@@ -67,29 +60,6 @@ class Portfolio extends React.Component {
         // return data.data;
     }
 
-    // TODO: Get all stocks
-    getTickerList = async () => {
-        const response = await fetch('/api/stocks/list', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                email: this.props.email
-            })
-        });
-
-        const data = await response.json();
-        console.log(data);
-        return data.data;
-        // this.setState({ stocks: data })
-        // data.data.forEach(element => {
-        //     this.state.stocks.push(element)
-        // });
-        // console.log(this.state.stocks)
-        // console.log(data);
-    }
-
     // TODO: Get balance
     // TODO: Update balance
     // TODO: Get current price (for stock)
@@ -113,35 +83,19 @@ class Portfolio extends React.Component {
         if (data.count === 0) {
             this.buyStock()
                 .then(res => {
-                    this.setState({stocks: this.state.stocks.concat([res])});
+                    // this.setState({stocks: this.state.stocks.concat([res])});
+                    this.setState({balance: this.state.balance + 1});
                     console.log(this.state.stocks);
                 });
         } else {
             const newQty = data.count + parseInt(this.state.qty);
-            console.log(data.count);
-            console.log(this.state.qty);
             this.setState({ qty: newQty });
             this.updateQty()
                 .then(() => {
-                    document.getElementById('form').reset();
+                    // document.getElementById('form').reset();
+                    this.setState({ qty: 0 })
+                    this.setState({balance: this.state.balance + 1});
                 });
-            this.getTickerList()
-                .then(res => this.setState({ stocks: res}));
-                // .then(res => this.getTickerList())
-                // .then(res => {
-                //     console.log(res);
-                //     this.setState({stocks: res});
-                //     console.log(this.state.stocks);
-                // });
-            
-
-                // .then(res => this.getTickerList()
-                //     // console.log(res.ticker);
-                //     // let row = document.getElementById(res.ticker);
-                //     // console.log(row);
-                //     // console.log(res);
-                // )
-                // .then(res => this.setState({stocks: res}));
         }
     }
 
@@ -150,55 +104,27 @@ class Portfolio extends React.Component {
             <div className='portfolio-ui'>
                 <div className='rowC'>
 
-                    <div className='stockTable'>
-                        <h2>Portfolio {this.state.profit}</h2>
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Ticker</th>
-                                    <th>Number of shares</th>
-                                    {/* <th>Buy at</th> */}
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {this.state.stocks.map(item => (
-                                    <TickerListRow key={item.ticker} ticker={item.ticker} shares={item.count} />
-                                //     <tr className="table-row" key={item.ticker}>
-                                //     <td className="table-item">
-                                //         {item.ticker}
-                                //     </td>
-                                    
-                                //     <td className="table-item">
-                                //         {item.count}
-                                //     </td>
-                    
-                                //     <td className="table-item">
-                                //         <button className="btn btn-remove" onClick={this.handleOnClick}>
-                                //             Sell
-                                //         </button>
-                                //     </td>
-                                // </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
+                    <TickerList email={this.props.email} balance={this.state.balance} />
 
                     <div className='buyingForm'>
                         <p>Cash - {this.state.balance}</p>
                         <form id="form" onSubmit={this.handleSubmit}>
                             <input type="text" id="ticker" name="ticker" placeholder="Ticker"
-                                    onChange={e => this.setState({ ticker: e.target.value })} />
+                                    value={this.state.ticker}
+                                    onChange={e => this.setState({ ticker: e.target.value })}
+                                    required />
                             <br></br>
                             <input type="number" id="shares" min="1" placeholder="Qty"
-                                    onChange={e => this.setState({ qty: e.target.value })} />
+                                    value={this.state.qty}
+                                    onChange={e => this.setState({ qty: e.target.value })} 
+                                    required />
                             <br></br>
                             <input type="submit" value="Buy" />
                         </form>
                     </div>
+                    
                 </div>
-
             </div>
-            // <h1>Hello, {this.state.email}</h1>
         );
     }
 }
