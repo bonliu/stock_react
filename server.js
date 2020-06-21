@@ -107,7 +107,11 @@ app.post('/api/stock/buy', (req, res) => {
             return;
         } else {
             res.json({
-                "message": "success"
+                "message": "success",
+                "data": {
+                    "ticker": req.body.ticker,
+                    "count": req.body.qty
+                }
             });
         }
     });
@@ -124,7 +128,11 @@ app.post('/api/stock/update', (req, res) => {
             return;
         } else {
             res.json({
-                "message": "success"
+                "message": "success",
+                "data": {
+                    "ticker": req.body.ticker,
+                    "count": req.body.qty
+                }
             });
         }
     });

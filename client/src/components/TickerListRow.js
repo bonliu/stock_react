@@ -11,14 +11,17 @@ class TickerListRow extends React.Component {
     }
 
     componentDidMount() {
+        console.log(this.props);
         this.setState({
-            // ticker: 'FB',
-            // shares: 12
             ticker: this.props.ticker,
             shares: this.props.shares
         });
-        console.log(this.props);
-        console.log(this.state);
+    }
+
+    componentDidUpdate(prevProps) {
+        if (this.props.shares !== prevProps.shares) {
+            this.setState({ shares: this.props.shares });
+        }
     }
     
     handleOnClick() {
@@ -27,12 +30,12 @@ class TickerListRow extends React.Component {
     
     render() {
         return (
-            <tr className="table-row">
+            <tr id={this.props.ticker} className="table-row">
                 <td className="table-item">
                     {this.state.ticker}
                 </td>
                 
-                <td className="table-item">
+                <td id="shares" className="table-item">
                     {this.state.shares}
                 </td>
 
