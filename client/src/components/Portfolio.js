@@ -78,6 +78,32 @@ class Portfolio extends React.Component {
     }
     // TODO: Update balance
     // TODO: Get current price (for stock)
+    getCurrentPrice = async () => {
+        const iex_token = 'pk_b13cf33210f742ffb6860aa0f6ade3b0';
+        let api = 'https://cloud.iexapis.com/stable/stock/TICKER/quote?token=TOKEN&filter=symbol,latestPrice,change';
+        api = api.replace('TICKER', this.state.ticker).replace('TOKEN', iex_token);
+        const response = await fetch(api);
+        const data = await response.json();
+        console.log(data);
+        this.updatePrice(data.latestPrice);
+    }
+
+    updatePrice = async p => {
+        const response = await fetch('/api/stock/update/price', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                price: parseInt(p*100),
+                email: this.state.email,
+                ticker: this.state.ticker
+            })
+        });
+
+        const data = await response.json();
+        console.log(data);
+    }
 
 
     handleSubmit = async e => {
@@ -101,7 +127,10 @@ class Portfolio extends React.Component {
                     // this.setState({stocks: this.state.stocks.concat([res])});
                     this.setState({balance: this.state.balance + 1});
                     console.log(this.state.stocks);
+                    this.getCurrentPrice();
+                    // console.log(this.state.ticker);
                 });
+                // .then(() => this.getCurrentPrice());
         } else {
             const newQty = data.count + parseInt(this.state.qty);
             this.setState({ qty: newQty });

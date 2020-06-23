@@ -35,7 +35,8 @@ const db = new sqlite3.Database(DBSOURCE, (err) => {
         let createStocks = `CREATE TABLE stocks (
             email text,
             ticker text,
-            count integer
+            count integer,
+            price integer
         )`;
         db.run(createStocks, (err) => {
             if (err) {

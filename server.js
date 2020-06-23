@@ -97,9 +97,9 @@ app.post('/api/stock/count', (req, res) => {
 });
 
 app.post('/api/stock/buy', (req, res) => {
-    const stmt = 'INSERT INTO stocks (email, ticker, count) VALUES (LOWER(?), UPPER(?), ?)';
+    const stmt = 'INSERT INTO stocks (email, ticker, count, price) VALUES (LOWER(?), UPPER(?), ?, ?)';
     console.log(req.body);
-    const params = [req.body.email, req.body.ticker, req.body.qty];
+    const params = [req.body.email, req.body.ticker, req.body.qty, req.body.price];
 
     db.run(stmt, params, (err) => {
         if (err) {
@@ -117,7 +117,7 @@ app.post('/api/stock/buy', (req, res) => {
     });
 });
 
-app.post('/api/stock/update', (req, res) => {
+app.post('/api/stock/update/count', (req, res) => {
     const stmt = 'UPDATE stocks SET count = ? WHERE email = LOWER(?) AND ticker = UPPER(?)';
     console.log(req.body);
     const params = [req.body.qty, req.body.email, req.body.ticker];
@@ -138,8 +138,30 @@ app.post('/api/stock/update', (req, res) => {
     });
 });
 
+app.post('/api/stock/update/price', (req, res) => {
+    const stmt = 'UPDATE stocks SET price = ? WHERE email = LOWER(?) AND ticker = UPPER(?)';
+    console.log(req.body);
+    const params = [req.body.price, req.body.email, req.body.ticker];
+
+    db.run(stmt, params, (err) => {
+        if (err) {
+            res.status(400).json({ "error": err.message });
+            return;
+        } else {
+            res.json({
+                "message": "success",
+                "data": {
+                    "ticker": req.body.ticker,
+                    "count": req.body.qty,
+                    "price": req.body.price
+                }
+            });
+        }
+    });
+});
+
 app.post('/api/stocks/list', (req, res) => {
-    const stmt = 'SELECT ticker, count FROM stocks WHERE email = ?';
+    const stmt = 'SELECT ticker, count, price FROM stocks WHERE email = ?';
     const params = [req.body.email];
 
     db.all(stmt, params, (err, rows) => {

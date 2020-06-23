@@ -33,13 +33,23 @@ class TickerList extends React.Component {
         console.log(this.props);
         this.setState({ email: this.props.email });
         this.getTickerList()
-            .then(res => this.setState({ stocks: res }));
+            .then(res => {
+                this.setState({ stocks: res })
+                this.state.stocks.forEach(stock => {
+                    stock['price'] = '1.23';
+                })
+                console.log(this.state.stocks);
+            });
+        console.log(this.state.stocks);
     }
 
     componentDidUpdate(prevProps) {
         if (this.props.balance !== prevProps.balance) {
             this.getTickerList()
-                .then(res => this.setState({ stocks: res }));
+                .then(res => {
+                    this.setState({ stocks: res })
+                    console.log(this.state);
+                });
         }
     }
 
@@ -52,12 +62,12 @@ class TickerList extends React.Component {
                         <tr>
                             <th>Ticker</th>
                             <th>Number of shares</th>
-                            {/* <th>Buy at</th> */}
+                            <th>Price</th>
                         </tr>
                     </thead>
                     <tbody>
                         {this.state.stocks.map(item => (
-                            <TickerListRow key={item.ticker} ticker={item.ticker} shares={item.count} />
+                            <TickerListRow key={item.ticker} ticker={item.ticker} shares={item.count} price={item.price} />
                         ))}
                     </tbody>
                 </table>

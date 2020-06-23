@@ -6,7 +6,8 @@ class TickerListRow extends React.Component {
         super(props);
         this.state = {
             ticker: '',
-            shares: 0
+            shares: 0,
+            price: 0
         }
     }
 
@@ -14,7 +15,8 @@ class TickerListRow extends React.Component {
         console.log(this.props);
         this.setState({
             ticker: this.props.ticker,
-            shares: this.props.shares
+            shares: this.props.shares,
+            price: this.props.price
         });
     }
 
@@ -37,6 +39,10 @@ class TickerListRow extends React.Component {
                 
                 <td id="shares" className="table-item">
                     {this.state.shares}
+                </td>
+
+                <td id="price" className="table-item">
+                    {this.state.price}
                 </td>
 
                 <td className="table-item">
