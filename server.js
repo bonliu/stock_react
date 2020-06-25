@@ -152,7 +152,6 @@ app.post('/api/stock/update/price', (req, res) => {
                 "message": "success",
                 "data": {
                     "ticker": req.body.ticker,
-                    "count": req.body.qty,
                     "price": req.body.price
                 }
             });
@@ -218,7 +217,8 @@ app.post('/api/balance/update', (req, res) => {
             return;
         } else {
             res.json({
-                "message": "success"
+                "message": "success",
+                "balance": req.body.balance
             });
         }
     });

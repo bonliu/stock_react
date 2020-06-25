@@ -13,82 +13,27 @@ class Portfolio extends React.Component {
             stocks: [],
             ticker: '',
             qty: 0
-        }
+        };
     }
 
     componentDidMount() {
-        // Load user's stock and price
         this.setState({ email: this.props.email });
+
         this.getBalance()
-            .then(res => this.setState({ balance: res }));
-
-        // Update user's stock value (total asset)
+            .then(currentBalance => this.setState({ balance: currentBalance }));
     }
 
-    buyStock = async () => {
-        const response = await fetch('/api/stock/buy', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                email: this.state.email,
-                ticker: this.state.ticker,
-                qty: parseInt(this.state.qty)
-            })
-        });
-
-        const data = await response.json();
-        console.log(data);
-        return data.data;
-    }
-
-    updateQty = async () => {
-        const response = await fetch('/api/stock/update', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                email: this.state.email,
-                ticker: this.state.ticker,
-                qty: parseInt(this.state.qty)
-            })
-        });
-
-        const data = await response.json();
-        console.log(data);
-        // return data.data;
-    }
-
-    // TODO: Get balance
-    getBalance = async e => {
-        const response = await fetch('/api/balance', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                email: this.props.email
-            })
-        });
-
-        const data = await response.json();
-        return parseFloat(data.balance / 100);
-    }
-    // TODO: Update balance
-    // TODO: Get current price (for stock)
     getCurrentPrice = async () => {
         const iex_token = 'pk_b13cf33210f742ffb6860aa0f6ade3b0';
         let api = 'https://cloud.iexapis.com/stable/stock/TICKER/quote?token=TOKEN&filter=symbol,latestPrice,change';
         api = api.replace('TICKER', this.state.ticker).replace('TOKEN', iex_token);
         const response = await fetch(api);
         const data = await response.json();
-        console.log(data);
-        this.updatePrice(data.latestPrice);
+        
+        return data.latestPrice;
     }
 
-    updatePrice = async p => {
+    setPrice = async p => {
         const response = await fetch('/api/stock/update/price', {
             method: 'POST',
             headers: {
@@ -103,11 +48,78 @@ class Portfolio extends React.Component {
 
         const data = await response.json();
         console.log(data);
+        return data;
     }
 
+    getBalance = async () => {
+        const response = await fetch('/api/balance', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                email: this.props.email
+            })
+        });
+
+        const data = await response.json();
+        return parseFloat(data.balance / 100).toFixed(2);
+    }
+
+    setBalance = async p => {
+        const response = await fetch('/api/balance/update', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                email: this.props.email,
+                balance: p
+            })
+        });
+
+        const data = await response.json();
+        this.setState({ balance: parseFloat(data.balance/100).toFixed(2) });
+    }
+
+    buyStock = async p => {
+        const response = await fetch('/api/stock/buy', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                email: this.state.email,
+                ticker: this.state.ticker,
+                qty: parseInt(this.state.qty),
+                price: parseInt(p*100)
+            })
+        });
+
+        const data = await response.json();
+        console.log(data);
+        return data.data;
+    }
+
+    setQty = async () => {
+        const response = await fetch('/api/stock/update/count', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                email: this.state.email,
+                ticker: this.state.ticker,
+                qty: parseInt(this.state.qty)
+            })
+        });
+        const data = await response.json();
+        console.log(data);
+    }
 
     handleSubmit = async e => {
         e.preventDefault();
+        // Find out if the user have the stock already
         const response = await fetch('/api/stock/count', {
             method: 'POST',
             headers: {
@@ -118,28 +130,31 @@ class Portfolio extends React.Component {
                 ticker: this.state.ticker
             })
         });
-
         const data = await response.json();
-        console.log(data);
-        if (data.count === 0) {
-            this.buyStock()
-                .then(res => {
-                    // this.setState({stocks: this.state.stocks.concat([res])});
-                    this.setState({balance: this.state.balance + 1});
-                    console.log(this.state.stocks);
-                    this.getCurrentPrice();
-                    // console.log(this.state.ticker);
-                });
-                // .then(() => this.getCurrentPrice());
-        } else {
-            const newQty = data.count + parseInt(this.state.qty);
-            this.setState({ qty: newQty });
-            this.updateQty()
-                .then(() => {
-                    // document.getElementById('form').reset();
-                    this.setState({ qty: 0 })
-                    this.setState({balance: this.state.balance + 1});
-                });
+        const count = await data.count;
+
+        // Update user's balance
+        let price = '';
+        try {
+            price = await this.getCurrentPrice();
+        } catch (err) {
+            // console.log(err);
+            alert('Invalid ticker');
+        } finally {
+            if (price !== '') {
+                if (count === 0) {
+                    // Buy
+                    this.buyStock(price);
+                    this.setBalance(this.state.balance * 100 - this.state.qty * price * 100);
+                } else {
+                    // Update number of shares
+                    const newQty = count + parseInt(this.state.qty);
+                    this.setState({ qty: newQty });
+                    this.setQty();
+                    this.setBalance(this.state.balance * 100 - count * price * 100);
+                    this.setPrice(price);
+                }
+            }
         }
     }
 
@@ -171,6 +186,7 @@ class Portfolio extends React.Component {
             </div>
         );
     }
+
 }
 
 export default Portfolio;

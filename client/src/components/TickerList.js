@@ -67,7 +67,7 @@ class TickerList extends React.Component {
                     </thead>
                     <tbody>
                         {this.state.stocks.map(item => (
-                            <TickerListRow key={item.ticker} ticker={item.ticker} shares={item.count} price={item.price} />
+                            <TickerListRow key={item.ticker} ticker={item.ticker} shares={item.count} price={parseFloat(item.price/100).toFixed(2)} />
                         ))}
                     </tbody>
                 </table>
