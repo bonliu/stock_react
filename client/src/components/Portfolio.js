@@ -40,7 +40,7 @@ class Portfolio extends React.Component {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                price: parseInt(p*100),
+                price: p,
                 email: this.state.email,
                 ticker: this.state.ticker
             })
@@ -63,7 +63,7 @@ class Portfolio extends React.Component {
         });
 
         const data = await response.json();
-        return parseFloat(data.balance / 100).toFixed(2);
+        return data.balance;
     }
 
     setBalance = async p => {
@@ -79,7 +79,7 @@ class Portfolio extends React.Component {
         });
 
         const data = await response.json();
-        this.setState({ balance: parseFloat(data.balance/100).toFixed(2) });
+        this.setState({ balance: data.balance });
     }
 
     buyStock = async p => {
@@ -91,8 +91,8 @@ class Portfolio extends React.Component {
             body: JSON.stringify({
                 email: this.state.email,
                 ticker: this.state.ticker,
-                qty: parseInt(this.state.qty),
-                price: parseInt(p*100)
+                qty: this.state.qty,
+                price: p
             })
         });
 
@@ -142,16 +142,19 @@ class Portfolio extends React.Component {
             alert('Invalid ticker');
         } finally {
             if (price !== '') {
-                if (count === 0) {
+                const cost = this.state.qty * price;
+                if (cost > this.state.balance) {
+                    alert('Insufficient balance');
+                } else if (count === 0) {
                     // Buy
                     this.buyStock(price);
-                    this.setBalance(this.state.balance * 100 - this.state.qty * price * 100);
+                    this.setBalance(this.state.balance - this.state.qty * price);
                 } else {
                     // Update number of shares
+                    this.setBalance(this.state.balance - parseInt(this.state.qty) * price);
                     const newQty = count + parseInt(this.state.qty);
                     this.setState({ qty: newQty });
                     this.setQty();
-                    this.setBalance(this.state.balance * 100 - count * price * 100);
                     this.setPrice(price);
                 }
             }
@@ -166,7 +169,7 @@ class Portfolio extends React.Component {
                     <TickerList email={this.props.email} balance={this.state.balance} />
 
                     <div className='buyingForm'>
-                        <p>Cash - {this.state.balance}</p>
+                        <p>Cash - {parseFloat(this.state.balance).toFixed(2)}</p>
                         <form id="form" onSubmit={this.handleSubmit}>
                             <input type="text" id="ticker" name="ticker" placeholder="Ticker"
                                     value={this.state.ticker}

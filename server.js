@@ -224,4 +224,20 @@ app.post('/api/balance/update', (req, res) => {
     });
 });
 
+app.post('/api/stocks/drop', (req, res) => {
+    const stmt = 'DROP TABLE stocks';
+    const params = [];
+
+    db.run(stmt, params, (err) => {
+        if (err) {
+            res.status(400).json({ "error": err.message });
+            return;
+        } else {
+            res.json({
+                "message": "success"
+            });
+        }
+    });
+});
+
 app.listen(port, () => console.log(`Listening on port ${port}`));

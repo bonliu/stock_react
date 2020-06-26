@@ -12,12 +12,12 @@ const db = new sqlite3.Database(DBSOURCE, (err) => {
         console.log('Creating users table...');
         let createUsers = `CREATE TABLE users (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name text,
-            email text,
-            password text,
-            balance integer DEFAULT 500000,
-            profit integer DEFAULT 0,
-            stocks text,
+            name TEXT,
+            email TEXT,
+            password TEXT,
+            balance REAL DEFAULT 5000.00,
+            profit REAL DEFAULT 0,
+            stocks TEXT,
             CONSTRAINT email_unique UNIQUE (email)
         )`;
         db.run(createUsers, (err) => {
@@ -33,10 +33,10 @@ const db = new sqlite3.Database(DBSOURCE, (err) => {
 
         console.log('Creating stocks table...');
         let createStocks = `CREATE TABLE stocks (
-            email text,
-            ticker text,
-            count integer,
-            price integer
+            email TEXT,
+            ticker TEXT,
+            count INTEGER,
+            price REAL
         )`;
         db.run(createStocks, (err) => {
             if (err) {
