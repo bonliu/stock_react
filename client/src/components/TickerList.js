@@ -9,6 +9,7 @@ class TickerList extends React.Component {
         this.state = {
             email: '',
             stocks: [],
+            profit: 0,
             balance: 0
         }
     }
@@ -29,18 +30,23 @@ class TickerList extends React.Component {
         return data.data;
     }
 
+    setProfit = async tickerList => {
+        let p = 0;
+        tickerList.forEach(stock => {
+            p += stock.price * stock.count;
+        });
+        this.setState({ profit: p });
+        console.log(`Profit: ${this.state.profit}`);
+    }
+
     componentDidMount() {
         console.log(this.props);
         this.setState({ email: this.props.email });
         this.getTickerList()
             .then(res => {
-                this.setState({ stocks: res })
-                this.state.stocks.forEach(stock => {
-                    stock['price'] = '1.23';
-                })
+                this.setState({ stocks: res });
                 console.log(this.state.stocks);
             });
-        console.log(this.state.stocks);
     }
 
     componentDidUpdate(prevProps) {
@@ -48,7 +54,7 @@ class TickerList extends React.Component {
             this.getTickerList()
                 .then(res => {
                     this.setState({ stocks: res })
-                    console.log(this.state);
+                    this.setProfit(res);
                 });
         }
     }
@@ -56,7 +62,7 @@ class TickerList extends React.Component {
     render() {
         return (
             <div className='stockTable'>
-                <h2>Portfolio {this.state.profit}</h2>
+                <h2>Portfolio $ {this.state.profit}</h2>
                 <table>
                     <thead>
                         <tr>
