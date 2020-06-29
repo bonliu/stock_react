@@ -1,5 +1,7 @@
 import React from 'react';
+import Popup from 'reactjs-popup';
 import '../styles/TickerListRow.css';
+import SellForm from './SellForm';
 
 class TickerListRow extends React.Component {
     constructor(props) {
@@ -46,9 +48,17 @@ class TickerListRow extends React.Component {
                 </td>
 
                 <td className="table-item">
-                    <button className="btn btn-remove" onClick={this.handleOnClick}>
+                    <Popup trigger={<button>Sell</button>} position="right center">
+                        {close => (
+                            <div>
+                                <SellForm ticker={this.state.ticker} maxShare={this.state.shares} />
+                                <button onClick={close}>Cancel</button>
+                            </div>
+                        )}
+                    </Popup>
+                    {/* <button className="btn btn-remove" onClick={this.handleOnClick}>
                         Sell
-                    </button>
+                    </button> */}
                 </td>
             </tr>
         );
