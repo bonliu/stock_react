@@ -224,6 +224,22 @@ app.post('/api/balance/update', (req, res) => {
     });
 });
 
+app.post('/api/stocks/remove', (req, res) => {
+    const stmt = 'DELETE FROM stocks WHERE ticker = ?';
+    const params = [req.ticker];
+
+    db.run(stmt, params, (err) => {
+        if (err) {
+            res.status(400).json({ "error": err.message });
+            return;
+        } else {
+            res.json({
+                "message": "success"
+            });
+        }
+    });
+});
+
 app.post('/api/stocks/drop', (req, res) => {
     const stmt = 'DROP TABLE stocks';
     const params = [];

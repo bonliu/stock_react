@@ -35,7 +35,7 @@ class TickerList extends React.Component {
         tickerList.forEach(stock => {
             p += stock.price * stock.count;
         });
-        this.setState({ profit: p });
+        this.setState({ profit: parseFloat(p).toFixed(2) });
         console.log(`Profit: ${this.state.profit}`);
     }
 
@@ -73,7 +73,7 @@ class TickerList extends React.Component {
                     </thead>
                     <tbody>
                         {this.state.stocks.map(item => (
-                            <TickerListRow key={item.ticker} ticker={item.ticker} shares={item.count} price={item.price} />
+                            <TickerListRow key={item.ticker} email={this.state.email} ticker={item.ticker} shares={item.count} price={item.price} />
                         ))}
                     </tbody>
                 </table>
