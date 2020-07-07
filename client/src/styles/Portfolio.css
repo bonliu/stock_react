@@ -1,0 +1,27 @@
+.portfolio-ui {
+    height: auto;
+    width: 80%;
+
+    margin-left:auto;
+    margin-right:auto;
+    margin-top:20px;
+    
+    border: 3px solid black;
+    
+    padding-top: 20px;
+    text-align: center;
+
+    flex-direction: row;
+}
+
+.rowC {
+    margin: auto;
+    padding-bottom: 20px;
+    display: flex;
+    flex-direction: row;
+}
+
+.buyingForm {
+    margin: auto;
+    /* height: 100px; */
+}

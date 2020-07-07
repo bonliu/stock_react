@@ -34,7 +34,8 @@
   },
   "main": "index.js",
   "devDependencies": {
-    "react-router-dom": "^5.2.0"
+    "react-router-dom": "^5.2.0",
+    "reactjs-popup": "^1.5.0"
   },
   "keywords": [],
   "author": "",
