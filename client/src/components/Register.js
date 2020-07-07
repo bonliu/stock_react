@@ -32,6 +32,7 @@ class Register extends React.Component {
             if (data.message === 'success') {
                 console.log('Account created successfully');
                 alert('Account created');
+                this.props.history.push('/login');
             } else {
                 alert('Account existed');
             }
