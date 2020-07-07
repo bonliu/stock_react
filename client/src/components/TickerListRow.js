@@ -140,6 +140,8 @@ class TickerListRow extends React.Component {
             this.setState({ shares: this.state.maxShare });
             this.setQty();
         }
+        console.log('reload');
+        window.location.reload();
     }
 
 
