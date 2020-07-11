@@ -225,8 +225,8 @@ app.post('/api/balance/update', (req, res) => {
 });
 
 app.post('/api/stocks/remove', (req, res) => {
-    const stmt = 'DELETE FROM stocks WHERE ticker = ?';
-    const params = [req.ticker];
+    const stmt = 'DELETE FROM stocks WHERE ticker = ? AND email = ?';
+    const params = [req.ticker, req.email];
 
     db.run(stmt, params, (err) => {
         if (err) {
@@ -238,6 +238,8 @@ app.post('/api/stocks/remove', (req, res) => {
             });
         }
     });
+    console.log('remove');
+    console.log(params);
 });
 
 app.post('/api/stocks/drop', (req, res) => {
