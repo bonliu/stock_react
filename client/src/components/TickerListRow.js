@@ -136,6 +136,7 @@ class TickerListRow extends React.Component {
     }
 
     removeTicker = async () => {
+        console.log('removing...');
         const response = await fetch('/api/stocks/remove', {
             method: 'POST',
             headers: {
@@ -182,6 +183,9 @@ class TickerListRow extends React.Component {
         console.log(`balance: ${balance}`);
         console.log(`price: ${price}`);
         console.log(`shareToSell: ${this.state.shareToSell}`);
+        console.log(typeof this.state.shareToSell);
+        console.log(`maxShare: ${this.state.maxShare}`);
+        console.log(typeof this.state.maxShare);
         const newBalance = (parseFloat(balance) + parseFloat(price) * parseFloat(this.state.shareToSell)).toFixed(2);
         console.log(`newBalance: ${newBalance}`);
         this.setBalance(newBalance);
@@ -193,9 +197,9 @@ class TickerListRow extends React.Component {
             this.setState({ maxShare: this.state.maxShare - this.state.shareToSell });
             this.setState({ shares: this.state.maxShare });
             this.setQty();
-            console.log('reload');
-            window.location.reload();
         }
+        console.log('reload');
+        window.location.reload();
         
     }
 
@@ -226,7 +230,7 @@ class TickerListRow extends React.Component {
                                     <input type="text" name="ticker" value={this.state.ticker} disabled></input>
 
                                     <label>Shares:</label>
-                                    <input type="number" name="shareToSell" min="1" max={this.state.maxShare} onChange={e => this.setState({ shareToSell: e.target.value })} required></input>
+                                    <input type="number" name="shareToSell" min="1" max={this.state.maxShare} onChange={e => this.setState({ shareToSell: parseInt(e.target.value) })} required></input>
                                     
                                     <br></br>
                                     
