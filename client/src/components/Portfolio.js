@@ -17,7 +17,7 @@ class Portfolio extends React.Component {
     }
 
     componentDidMount() {
-        this.setState({ email: this.props.email });
+        this.setState({ email: this.props.location.state.email });
 
         this.getBalance()
             .then(currentBalance => this.setState({ balance: currentBalance }));
@@ -58,7 +58,7 @@ class Portfolio extends React.Component {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                email: this.props.email
+                email: this.props.location.state.email
             })
         });
 
@@ -73,7 +73,7 @@ class Portfolio extends React.Component {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                email: this.props.email,
+                email: this.props.location.state.email,
                 balance: p
             })
         });
@@ -156,6 +156,7 @@ class Portfolio extends React.Component {
                     this.setState({ qty: newQty });
                     this.setQty();
                     this.setPrice(price);
+                    window.location.reload();
                 }
             }
         }
@@ -166,7 +167,7 @@ class Portfolio extends React.Component {
             <div className='portfolio-ui'>
                 <div className='rowC'>
 
-                    <TickerList email={this.props.email} balance={this.state.balance} />
+                    <TickerList email={this.props.location.state.email} balance={this.state.balance} />
 
                     <div className='buyingForm'>
                         <p>Cash - {parseFloat(this.state.balance).toFixed(2)}</p>

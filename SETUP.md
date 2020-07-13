@@ -124,3 +124,9 @@ npm install body-parser --save-dev
 ```bash
 npm install react-router-dom --save-dev
 ```
+
+# [Reactjs-popup](https://www.npmjs.com/package/reactjs-popup)
+### Installation
+```bash
+npm install reactjs-popup --save-dev
+```
