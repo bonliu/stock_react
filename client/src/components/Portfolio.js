@@ -156,6 +156,7 @@ class Portfolio extends React.Component {
                     this.setState({ qty: newQty });
                     this.setQty();
                     this.setPrice(price);
+                    window.location.reload();
                 }
             }
         }

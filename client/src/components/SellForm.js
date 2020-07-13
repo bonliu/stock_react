@@ -120,6 +120,8 @@ class SellForm extends React.Component {
         } else {
             this.setState({ maxShare: this.state.maxShare - this.state.share });
             this.setQty();
+            console.log('reload');
+            window.location.reload();
         }
     }
     

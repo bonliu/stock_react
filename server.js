@@ -225,13 +225,15 @@ app.post('/api/balance/update', (req, res) => {
 });
 
 app.post('/api/stocks/remove', (req, res) => {
-    const stmt = 'DELETE FROM stocks WHERE ticker = ?';
-    const params = [req.ticker];
+    console.log(req.body.ticker);
+    console.log(req.body.email);
+    const stmt = 'DELETE FROM stocks WHERE ticker = ? AND email = ?';
+    const params = [req.body.ticker, req.body.email];
 
     db.run(stmt, params, (err) => {
         if (err) {
             res.status(400).json({ "error": err.message });
-            return;
+            console.log(err);
         } else {
             res.json({
                 "message": "success"
