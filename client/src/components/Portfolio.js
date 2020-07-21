@@ -24,7 +24,7 @@ class Portfolio extends React.Component {
     }
 
     getCurrentPrice = async () => {
-        const iex_token = 'pk_b13cf33210f742ffb6860aa0f6ade3b0';
+        const iex_token = 'YOUR TOKEN';
         let api = 'https://cloud.iexapis.com/stable/stock/TICKER/quote?token=TOKEN&filter=symbol,latestPrice,change';
         api = api.replace('TICKER', this.state.ticker).replace('TOKEN', iex_token);
         const response = await fetch(api);
